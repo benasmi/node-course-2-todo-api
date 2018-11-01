@@ -1,4 +1,5 @@
 //Library imports
+var {ObjectID} = require('mongodb')
 var express = require('express');
 var bodyParser = require('body-parser');
 //Local imports
@@ -34,6 +35,25 @@ app.get('/todos', (req,res)=>{
     console.log("kazkas negerai");
     res.status(400).send(e);
   })
+});
+
+//Get id route
+app.get('/todos/:id', (req,res)=>{
+  var id = req.params.id;
+  if(!ObjectID.isValid(id)){
+    return res.status(400).send();
+  }
+
+  User.findById(id).then((user)=>{
+    if(!user){
+      return res.status(404).send();
+    }
+    res.send(user);
+  }).catch((e)=>{
+    res.status(400).send();
+  });
+
+
 });
 
 
