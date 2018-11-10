@@ -1,3 +1,8 @@
+
+//||'mongodb://node:BenasMiliunas123@ds249873.mlab.com:49873/node_api'
+
+require('./config/config');
+
 //Library imports
 var {ObjectID} = require('mongodb')
 var _ = require('lodash');
