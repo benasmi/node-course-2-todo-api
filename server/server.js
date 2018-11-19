@@ -1,7 +1,15 @@
 
-//||'mongodb://node:BenasMiliunas123@ds249873.mlab.com:49873/node_api'
 
-require('./config/config');
+var env = process.env.NODE_ENV || 'development';
+
+if(env === 'development'){
+  process.env.PORT = 3000;
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoApp'
+}else if(env==='test'){
+  process.env.PORT = 3000;
+  process.env.MONGODB_URI = 'mongodb://localhost:27017/TodoAppTest'
+}
+
 
 //Library imports
 var {ObjectID} = require('mongodb')
@@ -21,10 +29,8 @@ app.use(bodyParser.json());
 
 //Post route
 app.post('/todos', (req,res)=>{
-
   var todo = new Todo({
     text: req.body.text,
-
   });
 
   todo.save().then((doc)=>{
@@ -32,6 +38,22 @@ app.post('/todos', (req,res)=>{
   }, (e)=>{
       res.status(400).send(e);
   });
+});
+
+//POST /users
+
+app.post('/users', (req,res) =>{
+  var body = _.pick(req.body,['email','password']);
+  var user = new User(body);
+
+  user.save().then(()=>{
+    return user.generateAuthToken();
+  }).then((token) =>{
+    res.header('x-auth', token).send(user);
+  }).catch((e) =>{
+    res.status(400).send(e);
+  });
+
 });
 
 //Get route
