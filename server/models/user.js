@@ -36,6 +36,18 @@ var UserSchema  = new mongoose.Schema({
 
 });
 
+UserSchema.methods.removeToken = function (token){
+  var user = this;
+
+  return user.update({
+    $pull:{
+      tokens:{
+        token: token
+      }
+    }
+  });
+}
+
 UserSchema.statics.findByCredentials = function(email,password){
   var User = this;
 
